@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+	<title>Simulation</title>
+	<script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+</head>
+
+<body dir="rtl" data-new-gr-c-s-check-loaded="14.1113.0" data-gr-ext-installed="" data-gr-ext-disabled="forever">
+	<h3>برنامج محاكاة حساب مدة الخدمة الفعلية الأستاذ الباحث</h3>
+	<label for="wilaya1">الولاية</label>
+	<select type="text" class="form-control" name="Wilaya" id="wilaya1" required="">
+		<option value="0">------</option>
+	</select>
+	<label for="DOB">تاريخ آخر ترقية رتبة أستاذ محاضر أ</label>
+	<input type="date" id="DOB" value="2020-02-01" />
+	<label for="droit">هل أنت من أصحاب الحقوق مجاهد / ابن شهيد :</label>
+	<input type="checkbox" id="droit" value="yes" />
+	<label for="coupure">هل استفدت من فترة انقطاع عن الخدمة إحالة على الاستيداع</label>
+	<input type="checkbox" id="coupure" value="yes" />
+	<label for="coupure_start">تاريخ الانقطاع عن العمل:</label>
+	<input type="date" id="coupure_start" />
+	<label for="coupure_end">تاريخ استئناف العمل: </label>
+	<input type="date" id="coupure_end" />
+	<button onclick="dateOfNextPromotion()">الحساب</button>
+	<h3 style="color:#008CBA" id="result2"></h3>
+	<script language="javascript">
+
+		var imtiyaz = [{ id: 1, wilaya: "أدرار", mois: 6 }, { id: 3, wilaya: "الأغواط", mois: 3 }, { id: 4, wilaya: "أم البواقي", mois: 2 }, { id: 5, wilaya: "باتنة", mois: 2 }, { id: 7, wilaya: "بسكرة", mois: 2 }, { id: 8, wilaya: "بشار", mois: 3 }, { id: 11, wilaya: "تامنغست", mois: 6 }, { id: 12, wilaya: "تبسة", mois: 2 }, { id: 14, wilaya: "تيارت", mois: 2 }, { id: 17, wilaya: "الجلفة", mois: 2 }, { id: 20, wilaya: "سعيدة", mois: 2 }, { id: 24, wilaya: "قالمة", mois: 2 }, { id: 28, wilaya: "المسيلة", mois: 2 }, { id: 30, wilaya: "ورقلة", mois: 3 }, { id: 32, wilaya: "البيض", mois: 3 }, { id: 33, wilaya: "إليزي", mois: 6 }, { id: 37, wilaya: "تندوف", mois: 6 }, { id: 38, wilaya: "تيسمسيلت", mois: 2 }, { id: 39, wilaya: "الوادي", mois: 3 }, { id: 40, wilaya: "خنشلة", mois: 2 }, { id: 41, wilaya: "سوق أهراس", mois: 2 }, { id: 45, wilaya: "النعامة", mois: 3 }, { id: 47, wilaya: "غرداية", mois: 3 }, { id: 49, wilaya: "تيميمون", mois: 6 }, { id: 50, wilaya: "برج باجي مختار", mois: 6 }, { id: 51, wilaya: "أولاد جلال", mois: 2 }, { id: 52, wilaya: "بني عباس", mois: 3 }, { id: 53, wilaya: "إن صالح", mois: 6 }, { id: 54, wilaya: "إن قزام", mois: 6 }, { id: 55, wilaya: "توقرت", mois: 3 }, { id: 56, wilaya: "جانت", mois: 6 }, { id: 57, wilaya: "المغير", mois: 3 }, { id: 58, wilaya: "المنيعة", mois: 3 }];
+		var selectElement = document.getElementById("wilaya1");
+		imtiyaz.forEach(item => selectElement.add(new Option(item.wilaya, item.id)));
+		function findId(data, idToLookFor) {
+			var foundItem = data.find(item => item.id == idToLookFor);
+			return foundItem ? foundItem.mois : null;
+		}
+		function dateOfNextPromotion() {
+			// Get the wilaya value
+			let wilayaValue = document.getElementById("wilaya1").value;
+			let imtiyazMonths = findId(imtiyaz, wilayaValue);
+
+			// Get the user's date of last promotion
+			let dobInput = document.getElementById("DOB").value;
+			let dob = new Date(dobInput);
+			let DateTime = luxon.DateTime;
+			let startDate = DateTime.fromFormat(dobInput, 'yyyy-MM-dd');
+			let currentDate = DateTime.now();
+
+			// Calculate the difference in months
+			let diffInMonths = currentDate.diff(startDate, ['years', 'months', 'days']);
+			if (isNaN(diffInMonths)) {
+				console.log("Invalid date");
+				location.reload()
+			}
+			// Check if the coupure checkbox is checked
+			let isCoupureChecked = document.getElementById('coupure').checked;
+			let intermediate;
+			if (isCoupureChecked) {
+				let coupureStartInput = document.getElementById("coupure_start").value;
+				let coupureEndInput = document.getElementById("coupure_end").value;
+				let coupureStart = DateTime.fromFormat(coupureStartInput, 'yyyy-MM-dd')
+				let coupureEnd = DateTime.fromFormat(coupureEndInput, 'yyyy-MM-dd')
+				let coupurePeriod = coupureEnd.diff(coupureStart, ['years', 'months', 'days']).normalize();
+				intermediate = diffInMonths.minus(coupurePeriod).normalize();
+			} else
+				intermediate = diffInMonths;
+
+			// Calculate the total months with imtiyaz
+			let total;
+			if (imtiyazMonths > 0)
+				total = intermediate.plus({ months: imtiyazMonths * intermediate.years }).normalize();
+			else
+				total = intermediate;
+
+			// Check if the droit checkbox is checked
+			let isDroitChecked = document.getElementById('droit').checked;
+			let totalWithDroit;
+			if (isDroitChecked)
+				totalWithDroit = total.plus({ months: 20 }).normalize();
+			else
+				totalWithDroit = total;
+
+			totalWithDroit.normalize();
+			totalWithDroit.toObject();
+			let days = Math.round(totalWithDroit.days)
+			let expectedDate = startDate.plus({ years: 5 })
+
+			// Adjust the expected date based on the imtiyaz months
+			if (imtiyazMonths == 6) expectedDate = expectedDate.minus({ months: 18 });
+			if (imtiyazMonths == 3) expectedDate = expectedDate.minus({ months: 12 });
+			if (imtiyazMonths == 2) expectedDate = expectedDate.minus({ months: 8 });
+			if (isCoupureChecked) expectedDate = expectedDate.plus(coupurePeriod);
+			if (isDroitChecked) expectedDate = expectedDate.minus({ months: 20 });
+
+			let remaining = expectedDate.diff(currentDate, ['years', 'months', 'days']);
+
+			// Display the result
+			document.getElementById("result2").innerHTML = " تاريخ الاستحقاق " +
+				expectedDate.toLocaleString("ar-DZ", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+		}
+	</script>
+</body>
+
+</html>
