@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { DateTime } from 'luxon';
+import { DayPicker } from 'react-day-picker';
+import { arDZ } from 'date-fns/locale';
+import 'react-day-picker/dist/style.css'
+import 'tailwindcss/tailwind.css';
+
 
 const App = () => {
   const [wilaya, setWilaya] = useState('');
@@ -71,17 +76,19 @@ const App = () => {
   }
 
   return (
-    <div className="p-8">
-      <div>
-        <h3 className="text-xl font-bold mb-4">
+
+
+    <div className="p-8 min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md mx-auto">
+        <h3 className="text-xl font-bold mb-4 text-right">
           برنامج محاكاة حساب مدة الخدمة الفعلية الأستاذ الباحث
         </h3>
         <div className="mb-4">
-          <label htmlFor="wilaya1" className="block mb-2">الولاية</label>
+          <label htmlFor="wilaya1" className="block mb-2 text-right">الولاية</label>
           <select
             value={wilaya}
             onChange={e => setWilaya(e.target.value)}
-            className="border rounded p-2"
+            className="border rounded p-2 w-full"
           >
             <option value="0">------</option>
             {imtiyaz.map(item => (
@@ -90,25 +97,20 @@ const App = () => {
           </select>
         </div>
         <div className="mb-4">
-          <label htmlFor="DOB">تاريخ آخر ترقية رتبة أستاذ محاضر أ</label>
-          <input
-            type="date"
-            value={dob}
-            onChange={e => setDob(e.target.value)}
-            className="border rounded p-2"
-          />
+          <label htmlFor="DOB" className="block mb-2 text-right">تاريخ آخر ترقية رتبة أستاذ محاضر أ</label>
+          <DayPicker selected={dob} onDayClick={setDob} locale={arDZ} required />
         </div>
         <div className="mb-4">
-          <label htmlFor="droit">هل أنت من أصحاب الحقوق مجاهد / ابن شهيد :</label>
+          <label htmlFor="droit" className="block mb-2 text-right">هل أنت من أصحاب الحقوق مجاهد / ابن شهيد :</label>
           <input
             type="checkbox"
             checked={isDroitChecked}
             onChange={e => setIsDroitChecked(e.target.checked)}
             className="form-checkbox"
           />
-        </div>
+        </div>s
         <div className="mb-4">
-          <label htmlFor="coupure">هل استفد من فترة انقطاع عن الخدمة إحالة على الاستيداع</label>
+          <label htmlFor="coupure" className="block mb-2 text-right">هل استفد من فترة انقطاع عن الخدمة إحالة على الاستيداع</label>
           <input
             type="checkbox"
             checked={isCoupureChecked}
@@ -117,34 +119,26 @@ const App = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="coupure_start">تاريخ الانقطاع عن العمل:</label>
-          <input
-            type="date"
-            value={coupureStart}
-            onChange={e => setCoupureStart(e.target.value)}
-            className="border rounded p-2"
-          />
+          <label htmlFor="coupure_start" className="block mb-2 text-right">تاريخ الانقطاع عن العمل:</label>
+          <DayPicker selected={coupureStart} onDayClick={setCoupureStart} locale={arDZ}  />
         </div>
         <div className="mb-4">
-          <label htmlFor="coupure_end">تاريخ استئناف العمل:</label>
-          <input
-            type="date"
-            value={coupureEnd}
-            onChange={e => setCoupureEnd(e.target.value)}
-            className="border rounded p-2"
-          />
-        </div>
-        <div className="mb-4">
-          <button
-            onClick={dateOfNextPromotion}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            الحساب
-          </button>
-        </div>
-        <h3 className="text-blue-500">{result}</h3>
+     <label htmlFor="coupure_end" className="block mb-2 text-right">تاريخ استئناف العمل:</label>
+        <DayPicker selected={coupureEnd} onDayClick={setCoupureEnd} locale={arDZ}  />
       </div>
+      <div className="mb-4">
+        <button
+          onClick={dateOfNextPromotion}
+          className="bg-blue-500 text-white py-2 px-4 rounded w-full"
+        >
+          الحساب
+        </button>
+      </div>
+      <h3 className="text-blue-500 text-right">{result}</h3>
     </div>
+</div >
+
+    
   )
 }
 
