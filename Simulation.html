@@ -1,7 +1,10 @@
 <html lang="en">
+
 <head>
 	<title>Simulation</title>
 	<script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+	<style>   label, select, button {display:block;margin-bottom: 10px;}
+	</style>
 </head>
 
 <body dir="rtl" data-new-gr-c-s-check-loaded="14.1113.0" data-gr-ext-installed="" data-gr-ext-disabled="forever">
@@ -24,8 +27,23 @@
 	<h3 id="result_date"></h3>
 	<script language="javascript">
 
-		var imtiyaz = [{ id: 1, wilaya: "أدرار", mois: 6 }, { id: 3, wilaya: "الأغواط", mois: 3 }, { id: 4, wilaya: "أم البواقي", mois: 2 }, { id: 5, wilaya: "باتنة", mois: 2 }, { id: 7, wilaya: "بسكرة", mois: 2 }, { id: 8, wilaya: "بشار", mois: 3 }, { id: 11, wilaya: "تامنغست", mois: 6 }, { id: 12, wilaya: "تبسة", mois: 2 }, { id: 14, wilaya: "تيارت", mois: 2 }, { id: 17, wilaya: "الجلفة", mois: 2 }, { id: 20, wilaya: "سعيدة", mois: 2 }, { id: 24, wilaya: "قالمة", mois: 2 }, { id: 28, wilaya: "المسيلة", mois: 2 }, { id: 30, wilaya: "ورقلة", mois: 3 }, { id: 32, wilaya: "البيض", mois: 3 }, { id: 33, wilaya: "إليزي", mois: 6 }, { id: 37, wilaya: "تندوف", mois: 6 }, { id: 38, wilaya: "تيسمسيلت", mois: 2 }, { id: 39, wilaya: "الوادي", mois: 3 }, { id: 40, wilaya: "خنشلة", mois: 2 }, { id: 41, wilaya: "سوق أهراس", mois: 2 }, { id: 45, wilaya: "النعامة", mois: 3 }, { id: 47, wilaya: "غرداية", mois: 3 }, { id: 49, wilaya: "تيميمون", mois: 6 }, { id: 50, wilaya: "برج باجي مختار", mois: 6 }, { id: 51, wilaya: "أولاد جلال", mois: 2 }, { id: 52, wilaya: "بني عباس", mois: 3 }, { id: 53, wilaya: "إن صالح", mois: 6 }, { id: 54, wilaya: "إن قزام", mois: 6 }, { id: 55, wilaya: "توقرت", mois: 3 }, { id: 56, wilaya: "جانت", mois: 6 }, { id: 57, wilaya: "المغير", mois: 3 }, { id: 58, wilaya: "المنيعة", mois: 3 }];
+		const imtiyaz = [
+			{ id: 1, wilaya: "أدرار", mois: 6 }, { id: 3, wilaya: "الأغواط", mois: 3 }, { id: 4, wilaya: "أم البواقي", mois: 2 },
+			{ id: 5, wilaya: "باتنة", mois: 2 }, { id: 7, wilaya: "بسكرة", mois: 2 }, { id: 8, wilaya: "بشار", mois: 3 },
+			{ id: 11, wilaya: "تامنغست", mois: 6 }, { id: 12, wilaya: "تبسة", mois: 2 }, { id: 14, wilaya: "تيارت", mois: 2 },
+			{ id: 17, wilaya: "الجلفة", mois: 2 }, { id: 20, wilaya: "سعيدة", mois: 2 }, { id: 24, wilaya: "قالمة", mois: 2 },
+			{ id: 28, wilaya: "المسيلة", mois: 2 }, { id: 30, wilaya: "ورقلة", mois: 3 }, { id: 32, wilaya: "البيض", mois: 3 },
+			{ id: 33, wilaya: "إليزي", mois: 6 }, { id: 37, wilaya: "تندوف", mois: 6 }, { id: 38, wilaya: "تيسمسيلت", mois: 2 },
+			{ id: 39, wilaya: "الوادي", mois: 3 }, { id: 40, wilaya: "خنشلة", mois: 2 }, { id: 41, wilaya: "سوق أهراس", mois: 2 },
+			{ id: 45, wilaya: "النعامة", mois: 3 }, { id: 47, wilaya: "غرداية", mois: 3 }, { id: 49, wilaya: "تيميمون", mois: 6 },
+			{ id: 50, wilaya: "برج باجي مختار", mois: 6 }, { id: 51, wilaya: "أولاد جلال", mois: 2 },
+			{ id: 52, wilaya: "بني عباس", mois: 3 }, { id: 53, wilaya: "إن صالح", mois: 6 }, { id: 54, wilaya: "إن قزام", mois: 6 },
+			{ id: 55, wilaya: "توقرت", mois: 3 }, { id: 56, wilaya: "جانت", mois: 6 }, { id: 57, wilaya: "المغير", mois: 3 },
+			{ id: 58, wilaya: "المنيعة", mois: 3 }]; 
+		console.log(imtiyaz.length)
+		
 		var selectElement = document.getElementById("wilaya1");
+
 		imtiyaz.forEach(item => selectElement.add(new Option(item.wilaya, item.id)));
 		function findId(data, idToLookFor) {
 			var foundItem = data.find(item => item.id == idToLookFor);
@@ -35,15 +53,16 @@
 			// Get the wilaya value
 			const getValue = id => document.getElementById(id).value;
 			const isChecked = id => document.getElementById(id).checked;
-			let wilayaValue = getValue("wilaya1");
-			let imtiyazMonths = findId(imtiyaz, wilayaValue);
-
+			const DateObjFromStr = str => luxon.DateTime.fromFormat(str, 'yyyy-MM-dd');
+			const wilayaValue = getValue("wilaya1");
+			const imtiyazMonths = findId(imtiyaz, wilayaValue);
 			// Get the user's date of last promotion
-			let dobInput = getValue("DOB");
-			let DateTime = luxon.DateTime;
-			let startDate = DateTime.fromFormat(dobInput, 'yyyy-MM-dd');
-			let currentDate = DateTime.now();
-
+			const dobInput = getValue("DOB");
+			const startDate = DateObjFromStr(dobInput);
+			const currentDate = luxon.DateTime.now();
+			let expectedDate = startDate.plus({ years: 5 })
+			let intermediate;
+			let total;
 			// Calculate the difference in months
 			let diffInMonths = currentDate.diff(startDate, ['years', 'months', 'days']);
 			if (isNaN(diffInMonths)) {
@@ -51,45 +70,38 @@
 				location.reload()
 			}
 			// Check if the coupure checkbox is checked
-			let intermediate;
+
 			if (isChecked("coupure")) {
-				let coupureStart = DateTime.fromFormat(getValue("coupure_start"), 'yyyy-MM-dd')
-				let coupureEnd = DateTime.fromFormat(getValue("coupure_end"), 'yyyy-MM-dd')
-				let coupurePeriod = coupureEnd.diff(coupureStart, ['years', 'months', 'days']).normalize();
+				const coupureStart = DateObjFromStr(getValue("coupure_start"));
+				const coupureEnd = DateObjFromStr(getValue("coupure_end"));
+				const coupurePeriod = coupureEnd.diff(coupureStart, ['years', 'months', 'days']).normalize();
 				intermediate = diffInMonths.minus(coupurePeriod).normalize();
 			} else
 				intermediate = diffInMonths;
 
 			// Calculate the total months with imtiyaz
-			let total;
-			if (imtiyazMonths > 0)
+			if (imtiyazMonths)
 				total = intermediate.plus({ months: imtiyazMonths * intermediate.years }).normalize();
 			else
 				total = intermediate;
 
 			// Check if the droit checkbox is checked
-
-			let totalWithDroit;
-			if (isChecked("droit"))
-				totalWithDroit = total.plus({ months: 20 }).normalize();
-			else
-				totalWithDroit = total;
+			let totalWithDroit = isChecked("droit") ? total.plus({ months: 20 }).normalize() : total;
 
 			totalWithDroit.normalize();
 			totalWithDroit.toObject();
 			let days = Math.round(totalWithDroit.days)
-			let expectedDate = startDate.plus({ years: 5 })
 
-			// Adjust the expected date based on the imtiyaz months
-			if (imtiyazMonths == 6) expectedDate = expectedDate.minus({ months: 18 });
-			if (imtiyazMonths == 3) expectedDate = expectedDate.minus({ months: 12 });
-			if (imtiyazMonths == 2) expectedDate = expectedDate.minus({ months: 8 });
+
+			// Adjust the expected date based on the imtiyaz 
+			const imiyazAmount = { 2: 8, 3: 12, 6: 18 }
+
+			if (imtiyazMonths) expectedDate = expectedDate.minus({ months: imiyazAmount[imtiyazMonths] });
 			if (isChecked("coupure")) expectedDate = expectedDate.plus(coupurePeriod);
 			if (isChecked("droit")) expectedDate = expectedDate.minus({ months: 20 });
 
 			let remaining = expectedDate.diff(currentDate, ['years', 'months', 'days']);
-
-			document.getElementById("result_date").innerHTML = 'تاريخ الاستحقاق ' + expectedDate.toLocaleString();
+			document.getElementById("result_date").innerHTML = 'تاريخ الاستحقاق ' + expectedDate.setLocale('ar-DZ').toFormat('dd MMMM yyyy');
 		}
 	</script>
 </body>
